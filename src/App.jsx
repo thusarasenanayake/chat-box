@@ -5,21 +5,21 @@ import { Fragment } from 'react'
 import { useRef } from 'react'
 import { useEffect } from 'react'
 
+const sampleConversations = [
+  {
+    "question": "Hi, Good morning",
+    "answer": "Hi Anna, Good morning! ",
+  },
+  {
+    "question": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita minus voluptatum nesciunt reprehenderit quo, aliquam inventore tempore eveniet culpa deleniti tempora explicabo repellat. Sit nobis laudantium id dolore dolores. Eligendi.",
+    "answer": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloribus recusandae expedita sint.",
+  },
+
+]
+
 function App() {
 
-  const sampleConversations = [
-    {
-      "question": "Hi, Good morning",
-      "answer": "Hi Anna, Good morning! ",
-    },
-    {
-      "question": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita minus voluptatum nesciunt reprehenderit quo, aliquam inventore tempore eveniet culpa deleniti tempora explicabo repellat. Sit nobis laudantium id dolore dolores. Eligendi.",
-      "answer": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloribus recusandae expedita sint.",
-    },
-
-  ]
-
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [conversations, setConversations] = useState(sampleConversations)
   const chatBottomRef = useRef(null)
 
@@ -34,9 +34,17 @@ function App() {
   }
 
   function scrollToBottomOfChat() {
-    chatBottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
 
   }
+
+  useEffect(function () {
+    const timeOut = setTimeout(function () {
+      setLoading(false)
+    }, 2000)
+
+    return () => clearTimeout(timeOut)
+  }, [])
 
   useEffect(function () {
     scrollToBottomOfChat()
@@ -44,7 +52,10 @@ function App() {
 
   if (loading) {
     return (
-      <p className='font-mono'>LOADING...</p>
+      <span className="relative flex h-6 w-6">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+        <span className="relative inline-flex rounded-full h-6 w-6 bg-violet-500"></span>
+      </span>
     )
   }
 
@@ -60,12 +71,9 @@ function App() {
           </Fragment>
         ))}
         <div className='mb-3' ref={chatBottomRef} ></div>
-
-
       </div>
 
-
-      <div className="bg-slate-500 p-4">
+      <div className="bg-gray-300 p-4">
 
         <form onSubmit={addQuestion}>
           <input
